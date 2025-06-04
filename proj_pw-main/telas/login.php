@@ -1,47 +1,68 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+session_start();
 include_once("db.php");
-
-$nome = $_POST['nome'];
-$data_inicio = $_POST['data_inicio'];
-$data_fim = $_POST['data_fim'];
-$tempo_diario = $_POST['tempo_diario'];
-
-$sql = "INSERT INTO tarefas (nome, data_inicio, data_fim, tempo_diario)
-        VALUES ('$nome', '$data_inicio', '$data_fim', '$tempo_diario')";
-
-if (mysqli_query($conn, $sql)) {
-    // Exibe HTML de sucesso
-    ?>
-    <!DOCTYPE html>
-    <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <title>Sucesso</title>
-        <style>
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                text-align: center;
-                background-color: #f3e5f5;
-                margin-top: 100px;
-            }
-            .message {
-                background-color: #e1bee7;
-                display: inline-block;
-                padding: 40px;
-                border-radius: 12px;
-                font-size: 1.3em;
-                color: #4a148c;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="message">
-            ✅ Tarefa adicionada com sucesso!
-        </div>
-    </body>
-    </html>
-    <?php
-} else {
-    echo "Erro: " . mysqli_error($conn);
+include("header.php");
+ 
+$conn = conectarBanco();
+ 
+if (!$conn) {
+    die("Erro na conexão com o banco: " . mysqli_connect_error());
 }
+ 
+$pagina = 'home'; // valor padrão
+ 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+ 
+    $nome = $_POST['nome'] ?? '';
+    $data_inicio = $_POST['data_inicio'] ?? '';
+    $data_fim = $_POST['data_fim'] ?? '';
+    $tempo_diario = $_POST['tempo_diario'] ?? '';
+
+    // Verifica se todos os campos estão preenchidos
+    if ($nome && $data_inicio && $data_fim && $tempo_diario) {
+ 
+        $sql = "INSERT INTO tarefas (nome, data_inicio, data_fim, tempo_diario)
+                VALUES (?, ?, ?, ?)";
+ 
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssss", $nome, $data_inicio, $data_fim, $tempo_diario);
+ 
+        if ($stmt->execute()) {
+            $pagina = 'sucesso';
+        } else {
+            echo "Erro na inserção: " . $stmt->error;
+            $pagina = 'teste';
+        }
+ 
+        $stmt->close();
+ 
+    } else {
+        echo "";
+        $pagina = 'teste';
+    }
+ 
+} else {
+    echo "Acesso inválido.";
+    $pagina = 'teste';
+}
+ 
+// Redirecionamento com base na página
+switch ($pagina) {
+    case 'teste':
+        include 'views/teste.php';
+        break;
+    case 'sucesso':
+        include 'views/sucesso.php';
+        break;
+    case 'home':
+    default:
+        include 'views/home.php';
+        break;
+}
+ 
+$conn->close();
+include 'footer.php';
 ?>
+

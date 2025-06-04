@@ -1,50 +1,68 @@
-<?php 
-
-#iniciar sessão
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
+include_once("db.php");
+include("header.php");
 
-#Base de dados
-include 'db.php';
-
-#Cabeçalho
-include 'header.php';
-
-
-#Conteúdo da página
-
-if(isset($_SESSION['salvar'])){//se existir um login
-	if(isset($_GET['pagina'])){
-		$pagina = $_GET['pagina'];
-	}
-	else{
-		$pagina = 'teste';
-	}
+// Conecta com o banco
+$conn = conectarBanco();
+if (!$conn) {
+    die("Erro na conexão com o banco: " . mysqli_connect_error());
 }
 
-else{
-		$pagina = 'home';
+$pagina = 'home'; // Página padrão
+
+// Verifica se é um POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = trim($_POST['nome'] ?? '');
+    $data_inicio = trim($_POST['data_inicio'] ?? '');
+    $data_fim = trim($_POST['data_fim'] ?? '');
+    $tempo_diario = trim($_POST['tempo_diario'] ?? '');
+
+    // Verifica se todos os campos estão preenchidos
+    if ($nome && $data_inicio && $data_fim && $tempo_diario) {
+
+        $sql = "INSERT INTO tarefas (nome, data_inicio, data_fim, tempo_diario) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param("ssss", $nome, $data_inicio, $data_fim, $tempo_diario);
+            if ($stmt->execute()) {
+                $pagina = 'sucesso';
+            } else {
+                // Erro ao executar
+                $_SESSION['erro'] = "Erro ao inserir tarefa: " . $stmt->error;
+                $pagina = 'teste';
+            }
+            $stmt->close();
+        } else {
+            $_SESSION['erro'] = "Erro ao preparar a query: " . $conn->error;
+            $pagina = 'teste';
+        }
+
+    } else {
+        $_SESSION['erro'] = "Preencha todos os campos.";
+        $pagina = 'teste';
+    }
+} else {
+    // Se não for POST, exibe home
+    $pagina = 'home';
 }
 
-if(isset($_SESSION['salvar'])){//se existir um login
-	if(isset($_GET['pagina'])){
-		$pagina = $_GET['pagina'];
-	}
-	else{
-		$pagina = 'sucesso';
-	}
-}
-
-else{
-		$pagina = 'teste';
-}
-
+// Exibe a página correta
 switch ($pagina) {
-	case 'teste': include 'views/teste.php'; break;
-	case 'sucesso': include 'views/sucesso.php'; break;
-	default: include 'views/home.php'; 
-	break;
+    case 'sucesso':
+        include 'views/sucesso.php';
+        break;
+    case 'teste':
+        include 'views/teste.php';
+        break;
+    default:
+        include 'views/home.php';
+        break;
 }
 
-
-#Rodapé
+$conn->close();
 include 'footer.php';
+?>

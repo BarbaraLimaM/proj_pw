@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,18 +12,18 @@
       margin: 0;
       padding: 0;
     }
-
+ 
     body {
       background-color: #e9e1fa;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Tahoma, 'Geneva', Verdana, sans-serif;
       color: #2e003e;
     }
-
+ 
     .navbar .nav-link {
     font-weight: 500;
     font-size: 15px;
     }
-
+ 
     /* Título da seção */
     .title-section {
       margin: 30px auto 10px;
@@ -33,7 +34,7 @@
       font-weight: bold;
       border-radius: 3px;
     }
-
+ 
     /* Formulário */
     .form-wrapper {
       background-color:rgb(213, 196, 245);
@@ -43,17 +44,18 @@
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.05);
     }
-
+ 
     .form-group {
       margin-bottom: 20px;
     }
-
+ 
+ 
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: bold;
     }
-
+ 
     input[type="text"],
     input[type="date"] {
       width: 100%;
@@ -62,12 +64,12 @@
       border: none;
       font-size: 14px;
     }
-
+ 
     input::placeholder {
       color: #999;
       font-style: italic;
     }
-
+ 
     .submit-btn {
       margin-top: 20px;
       text-align: center;
@@ -75,7 +77,7 @@
       font-weight: bold;
       cursor: pointer;
     }
-
+ 
     .submit-btn button {
       background: none;
       border: 2px solid #2e003e;
@@ -87,7 +89,7 @@
       margin-top: 10px;
       transition: background 0.3s;
     }
-
+ 
     .submit-btn button:hover {
       background-color: #2e003e;
       color: white;
@@ -95,6 +97,7 @@
   </style>
 </head>
 <body>
+<link rel="stylesheet" href="/proj_pw/proj_pw-main/telas/footer.php">
 
   <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg" style="background-color:rgba(190, 160, 241, 0.81);">
@@ -117,10 +120,11 @@
 </nav>
   <!-- TÍTULO -->
   <div class="title-section">Nova categoria</div>
-
+ 
   <!-- FORMULÁRIO -->
+
   <div class="form-wrapper">
-  <form action="telas/salvar.php" method="POST">
+  <form action="/proj_pw/proj_pw-main/telas/login.php" method="POST">
       <div class="form-group">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" placeholder="Obrigatório" required>
@@ -131,19 +135,20 @@
       </div>
       <div class="form-group">
         <label for="fim">Data de fim:</label>
-        <input type="date" id="fim" name="data_fim">
+        <input type="date" id="fim" name="data_fim" required>
       </div>
       <div class="form-group">
         <label for="tempo">Tempo diário:</label>
         <input type="text" id="tempo" name="tempo_diario" placeholder="Obrigatório" required>
       </div>
-      <div class="submit-btn">
+      <div class="submit-btn" value="Salvar">
         Adicionar tarefa diária
         <br>
         <button type="submit">+</button>
       </div>
     </form>
   </div>
-
+ 
 </body>
 </html>
+ 

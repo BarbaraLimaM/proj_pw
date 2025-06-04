@@ -44,10 +44,30 @@ button.btn-lg {
     font-size: 16px;
 }
 
+.alert.success {
+    background-color: #e1bee7;
+    color: #4a148c;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.btn {
+    background-color: #ba68c8;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background-color: #9c27b0;
+}
 
 
-
-/* Outros estilos personalizados que você queira adicionar */
 </script>
   </body>
 </html>
